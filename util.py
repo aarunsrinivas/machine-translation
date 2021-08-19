@@ -1,4 +1,5 @@
 import string
+import numpy as np
 from torchtext.vocab import build_vocab_from_iterator
 from torch.nn.utils.rnn import pad_sequence
 
@@ -28,16 +29,10 @@ class Vocabulary:
 		return [self.stoi[token] if token in self.stoi else self.stoi['<unk>'] for token in text]
 
 	def reverse_tokenize(self, sequence):
-		sequence = sequence.squeeze(0)
-		sentence = ''
-		for i in sequence:
-			if self.itos[i.item()] == '<eos>':
-				return sentence
-			elif self.itos[i.item()] == '<sos>':
-				continue
-			else:
-				sentence += self.itos[i.item()] + ' '
-		return sentence
+		sequence = sequence.squeeze(0).detach().numpy()
+		bool_array = sequence == self.stoi['<eos>']
+		eos_idx = np.where(bool_array)[0][0] if True in bool_array else 1e9
+		return ' '.join([self.itos[sequence[i]] for i in range(1, min(eos_idx, len(sequence)))])
 
 
 class SourceTargetPaddingCollate:
