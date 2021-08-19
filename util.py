@@ -29,9 +29,8 @@ class Vocabulary:
 		return [self.stoi[token] if token in self.stoi else self.stoi['<unk>'] for token in text]
 
 	def reverse_tokenize(self, sequence):
-		sequence = sequence.squeeze(0).detach().numpy()
-		bool_array = sequence == self.stoi['<eos>']
-		eos_idx = np.where(bool_array)[0][0] if True in bool_array else 1e9
+		sequence = sequence.squeeze(0).detach().numpy().tolist()
+		eos_idx = sequence.index(self.stoi['<eos>']) if self.stoi['<eos>'] in sequence else 1e9
 		return ' '.join([self.itos[sequence[i]] for i in range(1, min(eos_idx, len(sequence)))])
 
 
