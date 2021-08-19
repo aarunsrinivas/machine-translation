@@ -31,7 +31,7 @@ class Vocabulary:
 		sequence = sequence.squeeze(0)
 		sentence = ''
 		for i in sequence:
-			if self.itos[i.item()] in ['<eos>', '<pad>']:
+			if self.itos[i.item()] == '<eos>':
 				return sentence
 			elif self.itos[i.item()] == '<sos>':
 				continue

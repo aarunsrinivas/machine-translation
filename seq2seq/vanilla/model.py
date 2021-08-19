@@ -65,5 +65,4 @@ class Seq2Seq(nn.Module):
 		outputs = self.forward(src_sequence,
 		                       torch.zeros(1, tgt_max_len, dtype=torch.int32).to(self.device), teacher_force=0.0)
 		tgt_sequence = torch.argmax(outputs, dim=-1)[0]
-		print(self.tgt_vocab.reverse_tokenize(tgt_sequence))
 		return self.tgt_vocab.reverse_tokenize(tgt_sequence)
